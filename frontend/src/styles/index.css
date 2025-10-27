@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@layer base {
+  html, body {
+    @apply m-0 p-0 w-full h-full;
+  }
+
+  #root {
+    @apply w-full h-full;
+  }
+
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: high-quality;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+}
