@@ -1,0 +1,67 @@
+# === TERRAFORM ===
+# Archivos de estado
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Archivos de respaldo y lock
+.terraform/
+.terraform.lock.hcl
+*.backup
+*.bak
+*.tmp
+
+# Archivos de salida de plan
+plan.out
+
+# Archivos de variables sensibles
+*.auto.tfvars
+*.auto.tfvars.json
+terraform.tfvars.json
+
+# === SCRIPTS / LOGS ===
+*.log
+*.err
+*.out
+
+# === SISTEMA / OS ===
+.DS_Store
+Thumbs.db
+
+# === VISUAL STUDIO CODE ===
+.vscode/
+.history/
+*.code-workspace
+
+# === PYTHON / POETRY (si usas scripts auxiliares) ===
+__pycache__/
+*.pyc
+.venv/
+.env
+.envrc
+.env.local
+.venv/
+poetry.lock
+
+# === NODE / JS (si usas infraestructura con CDK o JS) ===
+node_modules/
+dist/
+build/
+
+# === AWS CLI / CREDENTIALS ===
+.aws/
+*.pem
+*.key
+*.crt
+*.cer
+
+# === MÓDULOS EXTERNOS DESCARGADOS ===
+terraform.tfstate.backup
+terraform.tfstate.d/
+terraform.tfstate.lock.info
