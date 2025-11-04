@@ -1,10 +1,11 @@
 import { FaGithubAlt } from "react-icons/fa";
 import { FaRecycle } from "react-icons/fa6";
 import { IoMailOpenOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <footer className="bg-[#19363a] text-gray-300 py-6 fixed bottom-0 w-full z-20">
+    <footer className="bg-[#19363a] text-gray-300 py-6 w-full mt-auto">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-stretch">
           <div className="flex-1 py-4 text-left">
@@ -54,9 +55,14 @@ function Footer() {
             <FaRecycle className="text-3xl md:text-4xl text-gray-200" aria-hidden="true" />
             <p className="text-white font-semibold mt-2">EcoVision</p>
 
-            <button className="mt-4 bg-white text-gray-800 px-4 py-3 rounded-lg shadow-sm font-medium hover:bg-gray-100 cursor-pointer hover:text-black transition">
+            {/* Link hacia la ruta /login */}
+            <Link
+              to="/login"
+              className="mt-4 bg-white text-gray-800 px-4 py-3 rounded-lg shadow-sm font-medium hover:bg-gray-100 cursor-pointer hover:text-black transition inline-block"
+              aria-label="Ir al panel de administración"
+            >
               Admin
-            </button>
+            </Link>
           </div>
         </div>
       </div>
