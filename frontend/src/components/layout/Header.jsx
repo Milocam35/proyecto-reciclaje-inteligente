@@ -1,13 +1,12 @@
-
-import { LiaRecycleSolid } from "react-icons/lia";
+import { FaRecycle } from "react-icons/fa6";
 
 function Header() {
   return (
-    <header className="w-full flex items-center justify-between bg-[#3fd3b3] px-8 py-8">
+    <header className="w-full flex items-center justify-between bg-[#76e0c9] px-8 py-8">
       {/* Título y breadcrumb */}
       
       <div className="flex items-center gap-4">
-        <LiaRecycleSolid size={70} color="white"/>
+        <FaRecycle size={70} color="white"/>
         <h1 className="text-3xl font-bold text-white">Ecovision</h1>
       </div>
 
