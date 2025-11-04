@@ -32,7 +32,7 @@ module "rds" {
   username          = var.db_username
   password          = var.db_password
   subnet_ids        = module.vpc.private_subnet_ids
-  security_group_id = module.vpc.rds_security_group_id
+  rds_security_group_id = module.vpc.rds_security_group_id 
 }
 
 

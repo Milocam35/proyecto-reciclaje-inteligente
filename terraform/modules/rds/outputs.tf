@@ -7,3 +7,4 @@ output "rds_id" {
   description = "ID de la instancia RDS"
   value       = aws_db_instance.this.id
 }
+
