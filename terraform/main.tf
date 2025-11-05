@@ -58,6 +58,44 @@ module "lambda_test_db" {
 data "aws_caller_identity" "current" {}
 
 
+# --- lambda init db
+
+# --- Crea la Lambda usando tu módulo genérico ---
+module "lambda_db_init" {
+  source = "./modules/lambda"
+  function_name            = "${var.project_name}-lambda-db-init"
+  lambda_role_arn           = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LabRole"
+  source_path               = "${path.root}/lambdas/lambda_db_init"
+  filename                 = "${path.module}/dist/lambda_db_init.zip"
+  private_subnet_ids        = module.vpc.private_subnet_ids
+  lambda_security_group_id  = module.vpc.lambda_security_group_id
+
+   environment_variables = {
+    DB_HOST = module.rds.rds_endpoint
+    DB_USER = var.db_username
+    DB_PASS = var.db_password
+    DB_NAME = "reciclaje_db"
+  }
+}
+
+# --- Lambda para consultar la base de datos ---
+module "consult_db" {
+  source = "./modules/lambda"
+  function_name            = "${var.project_name}-lambda-consult-db"
+  lambda_role_arn           = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LabRole"
+  source_path               = "${path.root}/lambdas/consult_db"
+  filename                 = "${path.module}/dist/consult_db.zip"
+  private_subnet_ids        = module.vpc.private_subnet_ids
+  lambda_security_group_id  = module.vpc.lambda_security_group_id
+
+   environment_variables = {
+    DB_HOST = module.rds.rds_endpoint
+    DB_USER = var.db_username
+    DB_PASS = var.db_password
+    DB_NAME = "reciclaje_db"
+  }
+}
+
 module "s3_bucket" {
   source      = "./modules/s3"
   bucket_name = "${var.project_name}-bucket"
