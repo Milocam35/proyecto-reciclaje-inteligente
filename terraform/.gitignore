@@ -65,3 +65,12 @@ build/
 terraform.tfstate.backup
 terraform.tfstate.d/
 terraform.tfstate.lock.info
+
+# === LAMBDAS ===
+lambdas/**/__pycache__/
+lambdas/**/pymysql*/
+lambdas/**/*.dist-info/
+lambdas/**/.package/
+lambdas/**/venv/
+lambdas/**/.venv/
+dist/
