@@ -96,11 +96,41 @@ module "consult_db" {
   }
 }
 
+# --- Lambda para generar URL pre-firmadas ---
+module "generate_presigned_url" {
+  source = "./modules/lambda"
+  function_name            = "${var.project_name}-lambda-generate-presigned-url"
+  lambda_role_arn           = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LabRole"
+  source_path               = "${path.root}/lambdas/generate_presigned_url"
+  filename                 = "${path.module}/dist/generate_presigned_url.zip"
+  private_subnet_ids        = module.vpc.private_subnet_ids
+  lambda_security_group_id  = module.vpc.lambda_security_group_id
+
+   environment_variables = {
+    BUCKET_NAME = module.s3_bucket.bucket_name
+  }
+}
+
+
+# --- API Gateway que expone la Lambda ---
+module "api_gateway" {
+  source       = "./modules/api_gateway"
+  project_name = "reciclaje-inteligente"
+
+  routes = [
+    {
+      route_key  = "POST /generate-url"  # La ruta real en API Gateway mantiene el formato con /
+      lambda_arn = module.generate_presigned_url.lambda_arn
+      statement_id = "AllowInvoke-POST-generate-url"  # ID sin caracteres especiales
+    }
+  ]
+}
+
+# --- S3 Bucket ---
+
 module "s3_bucket" {
   source      = "./modules/s3"
   bucket_name = "${var.project_name}-bucket"
+  project_name = var.project_name
   environment = var.environment
-  tags        = {
-    Project = var.project_name
-  }
 }

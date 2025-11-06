@@ -16,3 +16,7 @@ output "rds_id" {
   description = "ID del RDS desde el módulo"
 }
 
+
+output "api_endpoint" {
+  value = module.api_gateway.api_endpoint
+}
