@@ -74,3 +74,13 @@ lambdas/**/.package/
 lambdas/**/venv/
 lambdas/**/.venv/
 dist/
+
+# === IGNORAR DEPENDENCIAS VENDORIZADAS EN generate_presigned_url ===
+# Ignora todo dentro de la carpeta de la lambda de generación de URLs salvo los ficheros
+# de código y el requirements.txt para que no subas paquetes instalados por error.
+/lambdas/generate_presigned_url/*
+!/lambdas/generate_presigned_url/handler.py
+!/lambdas/generate_presigned_url/requirements.txt
+!/lambdas/generate_presigned_url/*.py
+!/lambdas/generate_presigned_url/*.txt
+
