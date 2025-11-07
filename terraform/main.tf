@@ -51,7 +51,7 @@ module "lambda_test_db" {
     DB_HOST = module.rds.rds_endpoint
     DB_USER = var.db_username
     DB_PASS = var.db_password
-    DB_NAME = "reciclaje_db"
+    DB_NAME = var.db_name
   }
 }
 
@@ -74,7 +74,7 @@ module "lambda_db_init" {
     DB_HOST = module.rds.rds_endpoint
     DB_USER = var.db_username
     DB_PASS = var.db_password
-    DB_NAME = "reciclaje_db"
+    DB_NAME = var.db_name
   }
 }
 
@@ -92,7 +92,7 @@ module "consult_db" {
     DB_HOST = module.rds.rds_endpoint
     DB_USER = var.db_username
     DB_PASS = var.db_password
-    DB_NAME = "reciclaje_db"
+    DB_NAME = var.db_name
   }
 }
 
@@ -111,6 +111,23 @@ module "generate_presigned_url" {
   }
 }
 
+# --- Lambda para manejar eventos ---
+module "events_handler" {
+  source = "./modules/lambda"
+  function_name            = "${var.project_name}-lambda-events-handler"
+  lambda_role_arn           = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LabRole"
+  source_path               = "${path.root}/lambdas/events"
+  filename                  = "${path.root}/dist/events.zip"
+  private_subnet_ids        = module.vpc.private_subnet_ids
+  lambda_security_group_id  = module.vpc.lambda_security_group_id
+
+  environment_variables = {
+    DB_HOST = module.rds.rds_endpoint
+    DB_USER = var.db_username
+    DB_PASS = var.db_password
+    DB_NAME = var.db_name
+  }
+}
 
 # --- API Gateway que expone la Lambda ---
 module "api_gateway" {
@@ -122,6 +139,11 @@ module "api_gateway" {
       route_key  = "POST /generate-url"  # La ruta real en API Gateway mantiene el formato con /
       lambda_arn = module.generate_presigned_url.lambda_arn
       statement_id = "AllowInvoke-POST-generate-url"  # ID sin caracteres especiales
+    },
+    {
+      route_key  = "POST /events" #endpoint para crear un evento
+      lambda_arn = module.events_handler.lambda_arn
+      statement_id = "AllowInvoke-POST-events"
     }
   ]
 }

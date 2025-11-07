@@ -1,0 +1,114 @@
+import pymysql
+import os
+from models.event_model import EventModel
+
+class EventRepository:
+    """
+    Repositorio encargado de gestionar las operaciones CRUD de la tabla Evento.
+    """
+
+    def __init__(self):
+        # Configuración de conexión obtenida desde variables de entorno del Lambda
+        self.host = os.environ["DB_HOST"].split(":")[0]
+        self.user = os.environ["DB_USER"]
+        self.password = os.environ["DB_PASS"]
+        self.database = os.environ.get("DB_NAME", "reciclaje_db")
+
+    def _get_connection(self):
+        """Crea y devuelve una conexión a la base de datos MySQL."""
+        return pymysql.connect(
+            host=self.host,
+            user=self.user,
+            password=self.password,
+            database=self.database,
+            connect_timeout=5,
+            cursorclass=pymysql.cursors.DictCursor
+        )
+
+    # ------------------------
+    # 🟢 Crear un nuevo evento
+    # ------------------------
+    def insert_event(self, event: EventModel):
+        query = """
+        INSERT INTO Evento (
+            horaClasificado, horaSincronizado, duracion,
+            rutaImagen, tipoClasificado, tipoReal,
+            admin_id, confianza
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+        """
+        values = (
+            event.horaClasificado.strftime("%Y-%m-%d %H:%M:%S"),
+            event.horaSincronizado.strftime("%Y-%m-%d %H:%M:%S"),
+            event.duracion,
+            event.rutaImagen,
+            event.tipoClasificado.value if event.tipoClasificado else None,
+            event.tipoReal.value if event.tipoReal else None,
+            event.admin_id,
+            event.confianza
+        )
+
+        conn = self._get_connection()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(query, values)
+            conn.commit()
+        finally:
+            conn.close()
+
+    # ------------------------
+    # 🔵 Consultar todos los eventos
+    # ------------------------
+    def get_all_events(self):
+        query = "SELECT * FROM Evento ORDER BY horaSincronizado DESC;"
+        conn = self._get_connection()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(query)
+                results = cursor.fetchall()
+                return [EventModel.from_dict(row) for row in results]
+        finally:
+            conn.close()
+
+    # ------------------------
+    # 🟣 Obtener un evento por ID
+    # ------------------------
+    def get_event_by_id(self, event_id: int):
+        query = "SELECT * FROM Evento WHERE id = %s;"
+        conn = self._get_connection()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(query, (event_id,))
+                row = cursor.fetchone()
+                return EventModel.from_dict(row) if row else None
+        finally:
+            conn.close()
+
+    # ------------------------
+    # 🟠 Actualizar tipoReal o confianza
+    # ------------------------
+    def update_event(self, event_id: int, tipo_real=None, confianza=None):
+        query = "UPDATE Evento SET "
+        updates = []
+        params = []
+
+        if tipo_real:
+            updates.append("tipoReal = %s")
+            params.append(tipo_real)
+        if confianza:
+            updates.append("confianza = %s")
+            params.append(confianza)
+
+        if not updates:
+            return False  # Nada que actualizar
+
+        query += ", ".join(updates) + " WHERE id = %s;"
+        params.append(event_id)
+
+        conn = self._get_connection()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(query, params)
+            conn.commit()
+            return True
+        finally:
+            conn.close()

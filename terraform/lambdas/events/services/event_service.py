@@ -1,0 +1,96 @@
+from repositories.event_repository import EventRepository
+from models.event_model import EventModel, TipoReal
+from datetime import datetime
+import math
+
+class EventService:
+    """
+    Capa de servicio que encapsula la lógica de negocio relacionada con los eventos.
+    """
+
+    def __init__(self):
+        self.repo = EventRepository()
+
+    # ------------------------
+    # 🟢 Crear un nuevo evento
+    # ------------------------
+    def create_event(self, dto):
+        """
+        Crea un evento nuevo y lo guarda en la base de datos.
+        Valida campos obligatorios y calcula la duración automáticamente.
+        """
+        # Validaciones
+        if not dto.horaClasificado:
+            raise ValueError("El campo 'horaClasificado' es obligatorio.")
+        if not dto.tipoClasificado:
+            raise ValueError("El campo 'tipoClasificado' es obligatorio.")
+
+        # Calcular la duración (en segundos)
+        hora_clasificado = datetime.strptime(dto.horaClasificado, "%Y-%m-%d %H:%M:%S")
+        hora_sincronizado = datetime.now()
+        duracion = (hora_sincronizado - hora_clasificado).total_seconds()
+
+        # Crear modelo de evento
+        event = EventModel(
+            horaClasificado=hora_clasificado,
+            horaSincronizado=hora_sincronizado,
+            duracion=duracion,
+            rutaImagen=dto.rutaImagen,
+            tipoClasificado=dto.tipoClasificado,
+            tipoReal=TipoReal.NO_REVISADO,
+            admin_id=dto.admin_id,
+            confianza=None
+        )
+
+        # Guardar en DB
+        self.repo.insert_event(event)
+        return {"message": "Evento creado correctamente"}
+
+    # ------------------------
+    # 🔵 Obtener todos los eventos
+    # ------------------------
+    def list_events(self):
+        events = self.repo.get_all_events()
+        return [event.to_dict() for event in events]
+
+    # ------------------------
+    # 🟣 Obtener un evento por ID
+    # ------------------------
+    def get_event_by_id(self, event_id):
+        event = self.repo.get_event_by_id(event_id)
+        if not event:
+            raise ValueError(f"No se encontró el evento con ID {event_id}")
+        return event.to_dict()
+
+    # ------------------------
+    # 🟠 Actualizar tipoReal (clasificación real)
+    # ------------------------
+    def update_event_real_type(self, event_id, tipo_real):
+        """
+        Actualiza el tipo real del evento, y recalcula la confianza.
+        """
+        # Obtener evento existente
+        event = self.repo.get_event_by_id(event_id)
+        if not event:
+            raise ValueError(f"No existe el evento con ID {event_id}")
+
+        # Calcular confianza automática
+        confianza = self._calculate_confidence(event.tipoClasificado.value, tipo_real)
+
+        # Actualizar DB
+        success = self.repo.update_event(event_id, tipo_real=tipo_real, confianza=confianza)
+        if not success:
+            raise RuntimeError("No se pudo actualizar el evento.")
+
+        return {"message": "Evento actualizado correctamente", "confianza": confianza}
+
+    # ------------------------
+    # ⚙️ Lógica de negocio: cálculo de confianza
+    # ------------------------
+    def _calculate_confidence(self, tipo_clasificado, tipo_real):
+        """
+        Si coincide el tipo clasificado con el real => confianza 1.0
+        Si es distinto => confianza 0.0
+        (Podrías extenderlo más adelante con ML o métricas)
+        """
+        return 1.0 if tipo_clasificado == tipo_real else 0.0

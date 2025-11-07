@@ -27,7 +27,7 @@ def handler(event, context):
                 "status": "ok",
                 "message": "Consulta ejecutada correctamente",
                 "results": results
-            })
+            }, default=str)
         }
 
     except pymysql.MySQLError as e:
