@@ -2,7 +2,7 @@ import { FaRecycle } from "react-icons/fa6";
 
 function Header() {
   return (
-    <header className="w-full flex items-center justify-between bg-[#76e0c9] px-8 py-8">
+    <header className="w-full flex items-center justify-between bg-[#3B82F6] px-8 py-8">
       {/* Título y breadcrumb */}
       
       <div className="flex items-center gap-4">

@@ -1,10 +1,8 @@
-import React from "react";
-
 const DashboardLayout = ({ topCharts, bottomCharts }) => {
   return (
     <div className="relative w-full px-6 -mt-16 space-y-8">
       {/* Fila superior con 3 gráficas */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-6">
         {topCharts}
       </div>
 

@@ -1,11 +1,11 @@
 import Header from '../../components/layout/Header.jsx'
 import Footer from '../../components/layout/Footer.jsx'
 
-import DashboardLayout from '../../components/MainComponents/DashboardLayout.jsx'
-import ChartCard from '../../components/MainComponents/ChartCard.jsx'
+import DashboardLayout from '../../components/ui/DashboardLayout.jsx'
+import ChartCard from '../../components/ui/ChartCard.jsx'
 
-import CustomBarChart from '../../components/MainComponents/charts/BarChart.jsx'
-import CustomPieChart from '../../components/MainComponents/charts/PieChart.jsx'
+import CustomBarChart from '../../components/ui/charts/BarChart.jsx'
+import CustomPieChart from '../../components/ui/charts/PieChart.jsx'
 
 function AdminPage() {
   return (
@@ -16,7 +16,7 @@ function AdminPage() {
       {/* Contenedor principal */}
       <main className="grow relative pb-24">
         {/* Fondo superior (título "Dashboard" eliminado para evitar repetición) */}
-        <div className="relative h-32 md:h-36 bg-[#76e0c9] w-full rounded-b-3xl shadow-md flex flex-col justify-center items-center">
+        <div className="relative h-32 md:h-36 bg-[#3B82F6] w-full rounded-b-3xl shadow-md flex flex-col justify-center items-center">
 
           {/* Menú elevado dentro del header (más arriba) */}
           <div className="absolute top-6 md:top-2 left-1/2 transform -translate-x-1/2 z-50">

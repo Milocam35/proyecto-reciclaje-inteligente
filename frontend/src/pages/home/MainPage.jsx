@@ -1,11 +1,11 @@
 import Header from '../../components/layout/Header.jsx'
 import Footer from '../../components/layout/Footer.jsx'
 
-import DashboardLayout from '../../components/MainComponents/DashboardLayout.jsx'
-import ChartCard from '../../components/MainComponents/ChartCard.jsx'
+import DashboardLayout from '../../components/ui/DashboardLayout.jsx'
+import ChartCard from '../../components/ui/ChartCard.jsx'
 
-import CustomBarChart from '../../components/MainComponents/charts/BarChart.jsx'
-import CustomPieChart from '../../components/MainComponents/charts/PieChart.jsx'
+import CustomBarChart from '../../components/ui/charts/BarChart.jsx'
+import CustomPieChart from '../../components/ui/charts/PieChart.jsx'
 
 function MainPage() {
   return (
@@ -14,7 +14,7 @@ function MainPage() {
 
       {/* Contenido principal: ocupa todo el alto restante */}
       <main className="grow relative pb-24">
-        <div className="h-20 bg-[#76e0c9] w-full rounded-b-3xl shadow-md"></div>
+        <div className="h-20 bg-[#3B82F6] w-full rounded-b-3xl shadow-md"></div>
 
         <DashboardLayout
           topCharts={
