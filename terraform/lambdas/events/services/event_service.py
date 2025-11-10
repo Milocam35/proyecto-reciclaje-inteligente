@@ -95,3 +95,4 @@ class EventService:
         success = self.repo.delete_event(event_id)
         if not success:
             raise ValueError(f"No se pudo eliminar el evento con ID {event_id}")
+
