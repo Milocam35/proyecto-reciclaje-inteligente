@@ -27,7 +27,7 @@ class EventService:
 
         # Calcular la duración (en segundos)
         hora_clasificado = datetime.strptime(dto.horaClasificado, "%Y-%m-%d %H:%M:%S")
-        hora_sincronizado = datetime.now()
+        hora_sincronizado = datetime.strptime(dto.horaSincronizado, "%Y-%m-%d %H:%M:%S")
         duracion = (hora_sincronizado - hora_clasificado).total_seconds()
 
         # Crear modelo de evento
@@ -39,7 +39,7 @@ class EventService:
             tipoClasificado=dto.tipoClasificado,
             tipoReal=TipoReal.NO_REVISADO,
             admin_id=dto.admin_id,
-            confianza=None
+            confianza=dto.confianza
         )
 
         # Guardar en DB
@@ -52,6 +52,12 @@ class EventService:
     def list_events(self):
         events = self.repo.get_all_events()
         return [event.to_dict() for event in events]
+
+    # ------------------------
+    # 🟡 Obtener eventos paginados
+    # ------------------------
+    def get_paginated_events(self, page: int = 1, page_size: int = 10):
+        return self.repo.get_paginated_events(page, page_size)
 
     # ------------------------
     # 🟣 Obtener un evento por ID
@@ -67,30 +73,25 @@ class EventService:
     # ------------------------
     def update_event_real_type(self, event_id, tipo_real):
         """
-        Actualiza el tipo real del evento, y recalcula la confianza.
+        Actualiza el tipo real del evento
         """
         # Obtener evento existente
         event = self.repo.get_event_by_id(event_id)
         if not event:
             raise ValueError(f"No existe el evento con ID {event_id}")
-
-        # Calcular confianza automática
-        confianza = self._calculate_confidence(event.tipoClasificado.value, tipo_real)
-
+        
+        if tipo_real not in [tipo.value for tipo in TipoReal]:
+            raise ValueError("El tipo real proporcionado no es válido.")
+        
         # Actualizar DB
-        success = self.repo.update_event(event_id, tipo_real=tipo_real, confianza=confianza)
+        success = self.repo.update_event(event_id, tipo_real=tipo_real)
         if not success:
             raise RuntimeError("No se pudo actualizar el evento.")
 
-        return {"message": "Evento actualizado correctamente", "confianza": confianza}
-
     # ------------------------
-    # ⚙️ Lógica de negocio: cálculo de confianza
+    # Eliminar un evento por ID
     # ------------------------
-    def _calculate_confidence(self, tipo_clasificado, tipo_real):
-        """
-        Si coincide el tipo clasificado con el real => confianza 1.0
-        Si es distinto => confianza 0.0
-        (Podrías extenderlo más adelante con ML o métricas)
-        """
-        return 1.0 if tipo_clasificado == tipo_real else 0.0
+    def delete_event(self, event_id):
+        success = self.repo.delete_event(event_id)
+        if not success:
+            raise ValueError(f"No se pudo eliminar el evento con ID {event_id}")

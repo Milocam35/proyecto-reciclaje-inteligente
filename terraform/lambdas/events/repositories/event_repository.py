@@ -1,6 +1,7 @@
 import pymysql
 import os
 from models.event_model import EventModel
+from models.event_model import TipoReal
 
 class EventRepository:
     """
@@ -70,6 +71,44 @@ class EventRepository:
             conn.close()
 
     # ------------------------
+    # 🟡 Obtener eventos paginados
+    # ------------------------
+    def get_paginated_events(self, page: int = 1, page_size: int = 10):
+        """Obtiene eventos paginados, con total de registros."""
+        page = max(1, int(page))
+        page_size = min(max(1, int(page_size)), 100)
+
+        offset = (page - 1) * page_size
+
+        query = """
+            SELECT SQL_CALC_FOUND_ROWS *
+            FROM Evento
+            ORDER BY horaSincronizado DESC
+            LIMIT %s OFFSET %s;
+        """
+
+        conn = self._get_connection()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(query, (page_size, offset))
+                results = cursor.fetchall()
+
+                # Obtener total de registros
+                cursor.execute("SELECT FOUND_ROWS();")
+                total = cursor.fetchone()["FOUND_ROWS()"]
+
+                eventos = [EventModel.from_dict(row) for row in results]
+
+            return {
+                "page": page,
+                "page_size": page_size,
+                "total": total,
+                "events": [e.to_dict() for e in eventos]
+            }
+        finally:
+            conn.close()
+
+
     # 🟣 Obtener un evento por ID
     # ------------------------
     def get_event_by_id(self, event_id: int):
@@ -84,30 +123,28 @@ class EventRepository:
             conn.close()
 
     # ------------------------
-    # 🟠 Actualizar tipoReal o confianza
+    # 🟠 Actualizar tipoReal
     # ------------------------
-    def update_event(self, event_id: int, tipo_real=None, confianza=None):
-        query = "UPDATE Evento SET "
-        updates = []
-        params = []
-
-        if tipo_real:
-            updates.append("tipoReal = %s")
-            params.append(tipo_real)
-        if confianza:
-            updates.append("confianza = %s")
-            params.append(confianza)
-
-        if not updates:
-            return False  # Nada que actualizar
-
-        query += ", ".join(updates) + " WHERE id = %s;"
-        params.append(event_id)
-
+    def update_event(self, event_id: int, tipo_real=None):
+        query = "UPDATE Evento SET tipoReal = %s WHERE id = %s;"
         conn = self._get_connection()
         try:
             with conn.cursor() as cursor:
-                cursor.execute(query, params)
+                cursor.execute(query, (tipo_real, event_id))
+            conn.commit()
+            return True
+        finally:
+            conn.close()
+
+    # ------------------------
+    # 🔴 Eliminar un evento
+    # ------------------------
+    def delete_event(self, event_id: int):
+        query = "DELETE FROM Evento WHERE id = %s;"
+        conn = self._get_connection()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(query, (event_id,))
             conn.commit()
             return True
         finally:

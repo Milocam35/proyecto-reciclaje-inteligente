@@ -15,7 +15,9 @@ def handler(event, context):
 
         # === Ejemplo: consulta de usuarios ===
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
-            cursor.execute("SELECT * FROM users LIMIT 10;")
+            cursor.execute("USE reciclaje_db;")
+            cursor.execute("SHOW TABLES;")
+            cursor.execute("SELECT * FROM Evento LIMIT 10;")
             results = cursor.fetchall()
 
         connection.close()

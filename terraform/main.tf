@@ -117,7 +117,7 @@ module "events_handler" {
   function_name            = "${var.project_name}-lambda-events-handler"
   lambda_role_arn           = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LabRole"
   source_path               = "${path.root}/lambdas/events"
-  filename                  = "${path.root}/dist/events.zip"
+  filename                  = "${path.root}/dist/events.zip" #dependencias
   private_subnet_ids        = module.vpc.private_subnet_ids
   lambda_security_group_id  = module.vpc.lambda_security_group_id
 
@@ -144,6 +144,26 @@ module "api_gateway" {
       route_key  = "POST /events" #endpoint para crear un evento
       lambda_arn = module.events_handler.lambda_arn
       statement_id = "AllowInvoke-POST-events"
+    },
+    {
+      route_key  = "GET /events" #endpoint para listar eventos
+      lambda_arn = module.events_handler.lambda_arn
+      statement_id = "AllowInvoke-GET-events"
+    },
+    {
+      route_key  = "GET /events/{id}" #endpoint para obtener un evento por ID
+      lambda_arn = module.events_handler.lambda_arn
+      statement_id = "AllowInvoke-GET-events-id"
+    },
+    {
+      route_key  = "PUT /events/{id}/tipo" #endpoint para actualizar el tipo real de un evento
+      lambda_arn = module.events_handler.lambda_arn
+      statement_id = "AllowInvoke-PUT-events-id-tipo"
+    },
+    {
+      route_key  = "DELETE /events/{id}" #endpoint para eliminar un evento por ID
+      lambda_arn = module.events_handler.lambda_arn
+      statement_id = "AllowInvoke-DELETE-events-id"
     }
   ]
 }
