@@ -129,6 +129,24 @@ module "events_handler" {
   }
 }
 
+# --- Lambda para manejar eventos ---
+module "stats_handler" {
+  source = "./modules/lambda"
+  function_name            = "${var.project_name}-lambda-stats-handler"
+  lambda_role_arn           = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LabRole"
+  source_path               = "${path.root}/lambdas/stats"
+  filename                  = "${path.root}/dist/stats.zip" #dependencias
+  private_subnet_ids        = module.vpc.private_subnet_ids
+  lambda_security_group_id  = module.vpc.lambda_security_group_id
+
+  environment_variables = {
+    DB_HOST = module.rds.rds_endpoint
+    DB_USER = var.db_username
+    DB_PASS = var.db_password
+    DB_NAME = var.db_name
+  }
+}
+
 # --- API Gateway que expone la Lambda ---
 module "api_gateway" {
   source       = "./modules/api_gateway"
@@ -164,6 +182,16 @@ module "api_gateway" {
       route_key  = "DELETE /events/{id}" #endpoint para eliminar un evento por ID
       lambda_arn = module.events_handler.lambda_arn
       statement_id = "AllowInvoke-DELETE-events-id"
+    },
+    {
+      route_key  = "POST /stats" #endpoint para calcular estadisticas
+      lambda_arn = module.stats_handler.lambda_arn
+      statement_id = "AllowInvoke-POST-stats"
+    },
+    {
+      route_key  = "GET /stats" #endpoint para obtener estadísticas
+      lambda_arn = module.stats_handler.lambda_arn
+      statement_id = "AllowInvoke-GET-stats"
     }
   ]
 }

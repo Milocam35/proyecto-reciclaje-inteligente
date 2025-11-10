@@ -1,9 +1,9 @@
 class ErrorDto:
-    def __init__(self, id=None, hora=None, fuente=None, message=None, event_id=None):
+    def __init__(self, id=None, hora=None, fuente=None, mensaje=None, event_id=None):
         self.id = id
         self.hora = hora
         self.fuente = fuente
-        self.message = message
+        self.mensaje = mensaje
         self.event_id = event_id
     
     @staticmethod
@@ -15,7 +15,7 @@ class ErrorDto:
             id=data.get("id"),
             hora=data.get("hora"),
             fuente=data.get("fuente"),
-            message=data.get("message"),
+            mensaje=data.get("mensaje"),
             event_id=data.get("event_id")
         )
     
@@ -25,6 +25,6 @@ class ErrorDto:
             "id": self.id,
             "hora": self.hora,
             "fuente": self.fuente,
-            "message": self.message,
+            "mensaje": self.mensaje,
             "event_id": self.event_id
         }
