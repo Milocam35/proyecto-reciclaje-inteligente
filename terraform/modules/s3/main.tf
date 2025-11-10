@@ -1,8 +1,8 @@
 resource "aws_s3_bucket" "this" {
-  bucket        = "${var.project_name}-images"
+  bucket        = "${var.project_name}-catimages"
   force_destroy = true
   tags = {
-    Name = "${var.project_name}-images"
+    Name = "${var.project_name}-catimages"
   }
 }
 

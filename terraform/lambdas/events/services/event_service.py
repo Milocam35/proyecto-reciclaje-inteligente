@@ -84,13 +84,3 @@ class EventService:
 
         return {"message": "Evento actualizado correctamente", "confianza": confianza}
 
-    # ------------------------
-    # ⚙️ Lógica de negocio: cálculo de confianza
-    # ------------------------
-    def _calculate_confidence(self, tipo_clasificado, tipo_real):
-        """
-        Si coincide el tipo clasificado con el real => confianza 1.0
-        Si es distinto => confianza 0.0
-        (Podrías extenderlo más adelante con ML o métricas)
-        """
-        return 1.0 if tipo_clasificado == tipo_real else 0.0
