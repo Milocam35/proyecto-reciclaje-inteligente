@@ -129,7 +129,8 @@ module "events_handler" {
   }
 }
 
-# --- Lambda para manejar eventos ---
+
+# --- Lambda para manejar stats ---
 module "stats_handler" {
   source = "./modules/lambda"
   function_name            = "${var.project_name}-lambda-stats-handler"
@@ -184,14 +185,20 @@ module "api_gateway" {
       statement_id = "AllowInvoke-DELETE-events-id"
     },
     {
-      route_key  = "POST /stats" #endpoint para calcular estadisticas
+
+      route_key  = "POST /stats" #endpoint para calcular stats
       lambda_arn = module.stats_handler.lambda_arn
       statement_id = "AllowInvoke-POST-stats"
     },
     {
-      route_key  = "GET /stats" #endpoint para obtener estadísticas
+      route_key  = "GET /stats" #endpoint para obtener todas las stats
       lambda_arn = module.stats_handler.lambda_arn
       statement_id = "AllowInvoke-GET-stats"
+    },
+    {
+      route_key  = "GET /stats/{id}" #endpoint para obtener un stat por ID
+      lambda_arn = module.stats_handler.lambda_arn
+      statement_id = "AllowInvoke-GET-stats-id"
     }
   ]
 }
