@@ -1,5 +1,5 @@
 from datetime import datetime
-from events.repositories.event_repository import EventRepository
+from stats.repositories.event_repositoryAPI import EventRepositoryAPI as EventRepository
 from stats.repositories.stats_repository import StatsRepository
 from stats.models.stats_model import StatsModel
 from stats.dto.stats_dto import StatsDTO
