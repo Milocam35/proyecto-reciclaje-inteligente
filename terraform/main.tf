@@ -36,6 +36,15 @@ module "rds" {
 }
 
 
+# --- S3 Bucket ---
+
+module "s3_bucket" {
+  source      = "./modules/s3"
+  bucket_name = "${var.project_name}-bucket"
+  project_name = var.project_name
+  environment = var.environment
+}
+
 
 # --- lambda testear db privada ---
 module "lambda_test_db" {
@@ -66,7 +75,7 @@ module "lambda_db_init" {
   function_name            = "${var.project_name}-lambda-db-init"
   lambda_role_arn           = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LabRole"
   source_path               = "${path.root}/lambdas/lambda_db_init"
-  filename                 = "${path.module}/dist/lambda_db_init.zip"
+  filename                 = "${path.root}/dist/lambda_db_init.zip"
   private_subnet_ids        = module.vpc.private_subnet_ids
   lambda_security_group_id  = module.vpc.lambda_security_group_id
 
@@ -84,7 +93,7 @@ module "consult_db" {
   function_name            = "${var.project_name}-lambda-consult-db"
   lambda_role_arn           = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LabRole"
   source_path               = "${path.root}/lambdas/consult_db"
-  filename                 = "${path.module}/dist/consult_db.zip"
+  filename                 = "${path.root}/dist/consult_db.zip"
   private_subnet_ids        = module.vpc.private_subnet_ids
   lambda_security_group_id  = module.vpc.lambda_security_group_id
 
@@ -148,6 +157,68 @@ module "stats_handler" {
   }
 }
 
+
+# --- ECR para la imagen de la Lambda de clasificacion ---
+module "ecr" {
+  source       = "./modules/ecr"
+  project_name = var.project_name
+}
+
+# --- Lambda para clasificacion de imagenes que usa imagen desde ECR ---
+
+resource "aws_lambda_function" "image_classifier" {
+  function_name = "${var.project_name}-lambda-image-classifier"
+
+  package_type  = "Image"
+  image_uri     = "${module.ecr.ecr_repository_url}:latest"
+
+  architectures = ["arm64"]
+
+  role = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LabRole"
+
+  timeout = 60
+  memory_size = 2048
+
+  environment {
+    variables = {
+      BUCKET_NAME = module.s3_bucket.bucket_name
+      DB_HOST     = module.rds.rds_endpoint
+      DB_USER     = var.db_username
+      DB_PASS     = var.db_password
+      DB_NAME     = var.db_name
+    }
+  }
+
+  vpc_config {
+    subnet_ids         = module.vpc.private_subnet_ids
+    security_group_ids = [module.vpc.lambda_security_group_id]
+  }
+}
+
+
+resource "aws_lambda_permission" "allow_s3_invoke" {
+  statement_id  = "AllowS3InvokeClassifier"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.image_classifier.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = module.s3_bucket.bucket_arn
+}
+
+resource "aws_s3_bucket_notification" "notify_lambda" {
+  bucket = module.s3_bucket.bucket_name
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.image_classifier.arn
+    events              = ["s3:ObjectCreated:*"]
+    filter_prefix       = "uploads/"
+    filter_suffix       = ".jpg"
+  }
+
+  depends_on = [aws_lambda_permission.allow_s3_invoke]
+}
+
+
+
 # --- API Gateway que expone la Lambda ---
 module "api_gateway" {
   source       = "./modules/api_gateway"
@@ -201,13 +272,4 @@ module "api_gateway" {
       statement_id = "AllowInvoke-GET-stats-id"
     }
   ]
-}
-
-# --- S3 Bucket ---
-
-module "s3_bucket" {
-  source      = "./modules/s3"
-  bucket_name = "${var.project_name}-bucket"
-  project_name = var.project_name
-  environment = var.environment
 }

@@ -1,10 +1,16 @@
 from datetime import datetime
-from stats.repositories.event_repositoryAPI import EventRepositoryAPI as EventRepository
-from stats.repositories.stats_repository import StatsRepository
-from stats.models.stats_model import StatsModel
-from stats.dto.stats_dto import StatsDTO
-from events.models.event_model import TipoReal  # Enum de los tipos
+from repositories.event_repositoryAPI import EventRepositoryAPI as EventRepository
+from repositories.stats_repository import StatsRepository
+from models.stats_model import StatsModel
+from dto.stats_dto import StatsDTO
+from enum import Enum
 import math
+
+class TipoReal(Enum):
+    NO_REVISADO = "noRevisado"
+    RECICLABLE = "reciclable"
+    NO_RECICLABLE = "noReciclable"
+    ORGANICO = "organico"
 
 class StatsService:
     """
@@ -34,8 +40,9 @@ class StatsService:
         vp = vn = fp = fn = 0
 
         for event in events:
-            clasificado = event.tipoClasificado.value
-            real = event.tipoReal.value
+            print(event)
+            clasificado = event["tipoClasificado"]
+            real = event["tipoReal"]
 
             # Solo contamos si el tipo real fue revisado
             if real == TipoReal.NO_REVISADO.value:
@@ -43,11 +50,11 @@ class StatsService:
 
             if clasificado == "reciclable" and real == "reciclable":
                 vp += 1
-            elif clasificado == "reciclable" and real == "no_reciclable":
+            elif clasificado == "reciclable" and real == "noReciclable":
                 fp += 1
-            elif clasificado == "no_reciclable" and real == "reciclable":
+            elif clasificado == "noReciclable" and real == "reciclable":
                 fn += 1
-            elif clasificado == "no_reciclable" and real == "no_reciclable":
+            elif clasificado == "noReciclable" and real == "noReciclable":
                 vn += 1
 
         # Calcular métricas
@@ -77,7 +84,7 @@ class StatsService:
         )
 
         # Guardar en BD
-        self.stats_repo.insert_stats(stat)
+        self.stats_repo.insert_stat(stat)
 
         return {
             "message": "Estadísticas generadas correctamente",

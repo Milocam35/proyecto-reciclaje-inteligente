@@ -37,7 +37,7 @@ class EventService:
             duracion=duracion,
             rutaImagen=dto.rutaImagen,
             tipoClasificado=dto.tipoClasificado,
-            tipoReal=TipoReal.NO_REVISADO,
+            tipoReal=dto.tipoReal if dto.tipoReal else TipoReal.NO_REVISADO.value,
             admin_id=dto.admin_id,
             confianza=dto.confianza
         )
@@ -71,7 +71,7 @@ class EventService:
     # ------------------------
     # 🟠 Actualizar tipoReal (clasificación real)
     # ------------------------
-    def update_event_real_type(self, event_id, tipo_real):
+    def update_tipo_real(self, event_id, tipo_real):
         """
         Actualiza el tipo real del evento
         """

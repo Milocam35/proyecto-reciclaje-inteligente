@@ -1,6 +1,6 @@
 import pymysql
 import os
-from stats.models.stats_model import StatsModel
+from models.stats_model import StatsModel
 
 class StatsRepository:
     """
@@ -32,7 +32,7 @@ class StatsRepository:
         INSERT INTO Estadistica (
             fn, fp, vn, vp,
             precision_global, recall, f1_score, auc, fecha_creacion
-        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
         values = (
             stat.fn,
@@ -58,7 +58,7 @@ class StatsRepository:
     # 🔵 Obtener todas las estadísticas
     # ------------------------
     def get_all_stats(self):
-        query = "SELECT * FROM Estadistica ORDER BY fecha DESC;"
+        query = "SELECT * FROM Estadistica ORDER BY fecha_creacion DESC;"
         conn = self._get_connection()
         try:
             with conn.cursor() as cursor:

@@ -91,7 +91,7 @@ def get_paginated_events(event):
 
 
 # --- RUTA: PUT /events/{id}/tipo ---
-def update_event_tipo(event):
+def update_event_tipo(event, context=None):
     try:
         path_params = event.get("pathParameters", {})
         event_id = int(path_params.get("id"))
