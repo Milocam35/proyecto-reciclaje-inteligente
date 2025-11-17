@@ -1,4 +1,5 @@
-tflite-runtime==2.13.0
-numpy==1.26.4
-Pillow
+tensorflow==2.15.0
+pillow==10.1.0
+numpy==1.24.3
 boto3
+requests==2.31.0

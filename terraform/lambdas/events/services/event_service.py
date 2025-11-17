@@ -28,7 +28,7 @@ class EventService:
         # Calcular la duración (en segundos)
         hora_clasificado = datetime.strptime(dto.horaClasificado, "%Y-%m-%d %H:%M:%S")
         hora_sincronizado = datetime.strptime(dto.horaSincronizado, "%Y-%m-%d %H:%M:%S")
-        duracion = (hora_sincronizado - hora_clasificado).total_seconds()
+        duracion = (hora_clasificado - hora_sincronizado).total_seconds()
 
         # Crear modelo de evento
         event = EventModel(

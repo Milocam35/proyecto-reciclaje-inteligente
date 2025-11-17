@@ -1,21 +1,37 @@
-# Antes de ejecutar el build, asegúrate de tener Docker Buildx configurado para ARM64
-# docker buildx create --use --name lambda_builder
-# docker buildx inspect --bootstrap
+# Imagen base oficial de AWS Lambda para Python 3.11
+#Instrucciones para construir y subir la imagen a ECR:
+# 2. Build SIN usar buildx (esto evita el image index)
+#docker build --platform linux/amd64 \
+#  -t reciclaje-inteligente-image-classifier:latest \
+#  .
+#
+# 3. Tag
+#docker tag reciclaje-inteligente-image-classifier:latest \
+#  670018058027.dkr.ecr.us-east-1.amazonaws.com/reciclaje-inteligente-image-classifier:latest
 
-# Imagen base oficial de AWS Lambda para Python (ARM64 recomendado)
-FROM public.ecr.aws/lambda/python:3.11-arm64
+# 4. Login a ECR
+#aws ecr get-login-password --region us-east-1 | \
+#  docker login --username AWS --password-stdin \
+#  670018058027.dkr.ecr.us-east-1.amazonaws.com
 
-# Establecer el entorno de trabajo
+# 5. Push
+#docker push 670018058027.dkr.ecr.us-east-1.amazonaws.com/reciclaje-inteligente-image-classifier:latest
+FROM public.ecr.aws/lambda/python:3.11
+
+# Define directorio de trabajo
 WORKDIR /var/task
 
-# Copiar requirements y el código
-COPY requirements.txt ./
+# Copiar requirements primero para usar cache
+COPY requirements.txt .
 
-# Instalar dependencias livianas
-RUN pip install --no-cache-dir -r requirements.txt
+# Instalar dependencias - REMOVER el flag --platform
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir \
+    --only-binary=:all: \
+    -r requirements.txt
 
-# Copiar el resto del código (clasificador + utils + modelo)
+# Copiar todo el código
 COPY . .
 
-# Comando de entrada del Lambda Handler
-CMD ["handler.lambda_handler"]
+# Comando de handler para Lambda
+CMD ["handler.handler"]

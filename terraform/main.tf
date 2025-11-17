@@ -172,20 +172,30 @@ resource "aws_lambda_function" "image_classifier" {
   package_type  = "Image"
   image_uri     = "${module.ecr.ecr_repository_url}:latest"
 
-  architectures = ["arm64"]
+  architectures = ["x86_64"]
 
   role = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LabRole"
 
-  timeout = 60
-  memory_size = 2048
+  # TensorFlow completo con TFLite - balance entre recursos
+  timeout = 900        # 15 minutos
+  memory_size = 2048   # 2GB
+
+  ephemeral_storage {
+    size = 1024  # 1GB
+  }
 
   environment {
     variables = {
-      BUCKET_NAME = module.s3_bucket.bucket_name
-      DB_HOST     = module.rds.rds_endpoint
-      DB_USER     = var.db_username
-      DB_PASS     = var.db_password
-      DB_NAME     = var.db_name
+      BUCKET_NAME           = module.s3_bucket.bucket_name
+      DB_HOST               = module.rds.rds_endpoint
+      DB_USER               = var.db_username
+      DB_PASS               = var.db_password
+      DB_NAME               = var.db_name
+      # Optimizaciones de TensorFlow
+      TF_CPP_MIN_LOG_LEVEL  = "2"         # Reducir logs
+      TF_ENABLE_ONEDNN_OPTS = "0"         # Desactivar optimizaciones innecesarias
+      PYTHONUNBUFFERED      = "1"
+      API_GATEWAY_URL       = "https://rdn6x8ojtd.execute-api.us-east-1.amazonaws.com/events"
     }
   }
 

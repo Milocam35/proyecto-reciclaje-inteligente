@@ -5,7 +5,7 @@ import json
 GENERATE_URL_ENDPOINT = "https://rdn6x8ojtd.execute-api.us-east-1.amazonaws.com/generate-url"
 
 # === 2️⃣ Pedir la URL prefirmada ===
-payload = {"filename": "reciclable.jpg"}
+payload = {"filename": "organico.jpg"}
 headers = {"Content-Type": "application/json"}
 
 response = requests.post(GENERATE_URL_ENDPOINT, json=payload, headers=headers)
@@ -26,7 +26,7 @@ print("✅ URL prefirmada obtenida:")
 print(upload_url)
 
 # === 3️⃣ Subir la imagen a la URL prefirmada ===
-image_path = "scripts/probar_subir_img/imagen.jpg"
+image_path = "scripts/probar_subir_img/organico.jpg"
 
 with open(image_path, "rb") as f:
     upload_response = requests.put(upload_url, data=f, headers={"Content-Type": "image/jpeg"})
