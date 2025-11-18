@@ -3,6 +3,7 @@ import MainPage from '../pages/home/MainPage.jsx';
 import AdminPage from '../pages/admin/AdminPage.jsx';
 import LoginPage from '../pages/admin/LoginPage.jsx';
 import ReviewPage from '../pages/admin/ReviewPage.jsx';
+import MiPerfil from '../pages/admin/MiPerfil.jsx';
 
 function AppRoutes() {
   return (
@@ -12,6 +13,7 @@ function AppRoutes() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/admin/revision" element={<ReviewPage />} />
+        <Route path="/admin/miperfil" element={<MiPerfil />} />
       </Routes>
     </Router>
   )

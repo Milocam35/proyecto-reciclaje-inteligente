@@ -43,7 +43,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#3B82F6]">
+    <div className="min-h-screen flex items-center justify-center bg-blue-500">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6">
         {/* Icono insertado en la parte superior del cuadro de credenciales */}
         <div className="flex justify-center mb-4">

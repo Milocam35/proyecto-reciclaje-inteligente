@@ -4,6 +4,8 @@ function EventModal({ event, onClose }) {
   const [tipoReal, setTipoReal] = useState("");
   const isButtonDisabled = tipoReal === "";
 
+  const confianzaPorcentaje = Math.round((event.confianza || 0) * 100);
+
   return (
     <div
       className="fixed inset-0 bg-white/30 backdrop-blur-sm flex justify-center items-center z-50 p-6"
@@ -48,7 +50,7 @@ function EventModal({ event, onClose }) {
               <p>{event.duracion}s</p>
 
               <p className="font-bold">Confianza:</p>
-              <p>{event.confianza}%</p>
+              <p>{confianzaPorcentaje}%</p>
             </div>
           </div>
 

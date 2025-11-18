@@ -1,4 +1,7 @@
 function EventRow({ event, onClick }) {
+
+  const confianzaPorcentaje = Math.round((event.confianza || 0) * 100);
+
   return (
     <tr
       className="border-b hover:bg-gray-200 cursor-pointer transition"
@@ -33,11 +36,11 @@ function EventRow({ event, onClick }) {
             <div
               className="bg-blue-500 h-3 rounded-full"
               style={{
-                width: `${Math.min(event.confianza, 100)}%`,
+                width: `${Math.min(confianzaPorcentaje, 100)}%`,
               }}
             ></div>
           </div>
-          <span className="text-sm text-gray-700">{event.confianza}%</span>
+          <span className="text-sm text-gray-700">{confianzaPorcentaje}%</span>
         </div>
       </td>
       <td className="px-6 py-3 text-gray-700">{event.horaClasificado}</td>

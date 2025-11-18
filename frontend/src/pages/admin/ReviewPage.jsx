@@ -15,7 +15,7 @@ function ReviewPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const pageSize = 2; // Máx 2 eventos por página
+  const pageSize = 10; // Máx 2 eventos por página
 
   useEffect(() => {
     const fetchEvents = async () => {
