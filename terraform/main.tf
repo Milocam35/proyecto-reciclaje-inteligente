@@ -283,3 +283,51 @@ module "api_gateway" {
     }
   ]
 }
+
+module "cognito" {
+  source = "./modules/cognito"
+
+  project_name   = var.project_name
+
+  admin_email    = "admin@ecovision.com"
+  admin_password = "Admin12345!"
+  admin_name     = "Administrador General"
+  admin_username = "admin"
+
+  callback_urls = [
+    "https://admin.ecovision.com/auth/callback",
+    "http://localhost:5173/auth/callback"
+  ]
+
+  logout_urls = [
+    "https://admin.ecovision.com/auth/logout",
+    "http://localhost:5173/auth/logout"
+  ]
+}
+
+
+resource "aws_apigatewayv2_authorizer" "cognito_authorizer" {
+  api_id           = module.api_gateway.api_id
+  name             = "${var.project_name}-cognito-authorizer"
+  authorizer_type  = "JWT"
+
+  identity_sources = ["$request.header.Authorization"]
+
+  jwt_configuration {
+    audience = [module.cognito.user_pool_client_id]
+    issuer   = "https://cognito-idp.${var.region}.amazonaws.com/${module.cognito.user_pool_id}"
+  }
+}
+
+# Rutas protegidas con Cognito (ejemplo)
+
+#resource "aws_apigatewayv2_route" "protected_events" {
+#  api_id    = module.api_gateway.api_id
+#  route_key = "GET /events"
+#
+#  authorization_type = "JWT"
+#  authorizer_id      = aws_apigatewayv2_authorizer.cognito_authorizer.id
+#
+#  target = "integrations/${module.api_gateway.integrations["GET /events"]}"
+#}
+

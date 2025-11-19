@@ -1,0 +1,138 @@
+.
+├── database
+├── docs
+├── firmware
+├── frontend
+│   ├── public
+│   └── src
+│       ├── assets
+│       ├── components
+│       │   ├── layout
+│       │   └── ui
+│       │       └── charts
+│       ├── context
+│       ├── hooks
+│       ├── pages
+│       │   ├── admin
+│       │   └── home
+│       │       └── components
+│       ├── routes
+│       ├── services
+│       ├── styles
+│       └── utils
+└── terraform
+    ├── environments
+    │   ├── dev
+    │   └── prod
+    ├── image_classifier
+    │   ├── model
+    │   └── utils
+    ├── lambdas
+    │   ├── consult_db
+    │   │   ├── pymysql
+    │   │   │   └── constants
+    │   │   └── pymysql-1.1.2.dist-info
+    │   │       └── licenses
+    │   ├── events
+    │   │   ├── dto
+    │   │   ├── models
+    │   │   ├── pymysql
+    │   │   │   └── constants
+    │   │   ├── pymysql-1.1.2.dist-info
+    │   │   │   └── licenses
+    │   │   ├── repositories
+    │   │   └── services
+    │   ├── generate_presigned_url
+    │   │   ├── boto3-1.40.67.dist-info
+    │   │   ├── boto3-1.40.68.dist-info
+    │   │   ├── boto3-1.40.69.dist-info
+    │   │   ├── boto3-1.40.70.dist-info
+    │   │   ├── boto3-1.40.71.dist-info
+    │   │   ├── boto3-1.40.72.dist-info
+    │   │   ├── boto3-1.40.73.dist-info
+    │   │   ├── boto3-1.40.74.dist-info
+    │   │   ├── botocore-1.40.67.dist-info
+    │   │   ├── botocore-1.40.68.dist-info
+    │   │   ├── botocore-1.40.69.dist-info
+    │   │   ├── botocore-1.40.70.dist-info
+    │   │   ├── botocore-1.40.71.dist-info
+    │   │   ├── botocore-1.40.72.dist-info
+    │   │   ├── botocore-1.40.73.dist-info
+    │   │   ├── botocore-1.40.74.dist-info
+    │   │   ├── dateutil
+    │   │   │   ├── parser
+    │   │   │   ├── tz
+    │   │   │   └── zoneinfo
+    │   │   ├── jmespath
+    │   │   ├── jmespath-1.0.1.dist-info
+    │   │   ├── python_dateutil-2.9.0.post0.dist-info
+    │   │   ├── s3transfer
+    │   │   ├── s3transfer-0.14.0.dist-info
+    │   │   ├── six-1.17.0.dist-info
+    │   │   ├── urllib3
+    │   │   │   ├── contrib
+    │   │   │   │   └── emscripten
+    │   │   │   ├── http2
+    │   │   │   └── util
+    │   │   └── urllib3-2.5.0.dist-info
+    │   │       └── licenses
+    │   ├── lambda_db_init
+    │   │   ├── pymysql
+    │   │   │   └── constants
+    │   │   └── pymysql-1.1.2.dist-info
+    │   │       └── licenses
+    │   ├── notifications
+    │   │   ├── dto
+    │   │   ├── models
+    │   │   ├── repositories
+    │   │   └── services
+    │   ├── stats
+    │   │   ├── certifi
+    │   │   ├── certifi-2025.10.5.dist-info
+    │   │   │   └── licenses
+    │   │   ├── certifi-2025.11.12.dist-info
+    │   │   │   └── licenses
+    │   │   ├── charset_normalizer
+    │   │   │   └── cli
+    │   │   ├── charset_normalizer-3.4.4.dist-info
+    │   │   │   └── licenses
+    │   │   ├── dto
+    │   │   ├── idna
+    │   │   ├── idna-3.11.dist-info
+    │   │   │   └── licenses
+    │   │   ├── models
+    │   │   ├── pymysql
+    │   │   │   └── constants
+    │   │   ├── pymysql-1.1.2.dist-info
+    │   │   │   └── licenses
+    │   │   ├── repositories
+    │   │   ├── requests-2.32.5.dist-info
+    │   │   │   └── licenses
+    │   │   ├── services
+    │   │   ├── urllib3
+    │   │   │   ├── contrib
+    │   │   │   │   └── emscripten
+    │   │   │   ├── http2
+    │   │   │   └── util
+    │   │   └── urllib3-2.5.0.dist-info
+    │   │       └── licenses
+    │   └── test_db
+    │       ├── pymysql
+    │       │   └── constants
+    │       └── pymysql-1.1.2.dist-info
+    │           └── licenses
+    ├── modules
+    │   ├── api_gateway
+    │   ├── cloudwatch
+    │   ├── cognito
+    │   ├── ecr
+    │   ├── lambda
+    │   │   └── lambda_builds
+    │   ├── rds
+    │   ├── s3
+    │   ├── sns
+    │   └── vpc
+    └── scripts
+        └── probar_subir_img
+
+136 directories
