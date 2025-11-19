@@ -1,11 +1,12 @@
-import Header from '../../components/layout/Header.jsx'
-import Footer from '../../components/layout/Footer.jsx'
+import Header from '../../components/layout/Header.jsx';
+import Footer from '../../components/layout/Footer.jsx';
 
-import DashboardLayout from '../../components/ui/DashboardLayout.jsx'
-import ChartCard from '../../components/ui/ChartCard.jsx'
+import DashboardLayout from '../../components/ui/DashboardLayout.jsx';
+import ChartCard from '../../components/ui/ChartCard.jsx';
 
-import CustomBarChart from '../../components/ui/charts/BarChart.jsx'
-import CustomPieChart from '../../components/ui/charts/PieChart.jsx'
+import CustomBarChart from '../../components/ui/charts/BarChart.jsx';
+import CustomPieChart from '../../components/ui/charts/PieChart.jsx';
+import AdminMenu from '../../components/ui/AdminMenu.jsx'; // 👈 nuevo import
 
 function AdminPage() {
   return (
@@ -15,31 +16,15 @@ function AdminPage() {
 
       {/* Contenedor principal */}
       <main className="grow relative pb-24">
-        {/* Fondo superior (título "Dashboard" eliminado para evitar repetición) */}
+        {/* Fondo superior */}
         <div className="relative h-32 md:h-36 bg-[#3B82F6] w-full rounded-b-3xl shadow-md flex flex-col justify-center items-center">
 
-          {/* Menú elevado dentro del header (más arriba) */}
-          <div className="absolute top-6 md:top-2 left-1/2 transform -translate-x-1/2 z-50">
-            <div className="bg-white shadow-lg rounded-full px-8 py-2 flex space-x-6 md:space-x-8 border border-gray-200">
-              <button className="text-gray-700 font-semibold hover:text-[#2b7a78] transition-colors">
-                Mi Perfil
-              </button>
-              <button className="text-gray-700 font-semibold hover:text-[#2b7a78] transition-colors">
-                Menú Principal
-              </button>
-              <button className="text-gray-700 font-semibold hover:text-[#2b7a78] transition-colors">
-                Notificaciones
-              </button>
-              <button className="text-gray-700 font-semibold hover:text-[#2b7a78] transition-colors">
-                Revisión
-              </button>
-            </div>
-          </div>
+          {/* 👇 Menú elevado ahora importado como componente */}
+          <AdminMenu />
         </div>
 
-        {/* Reducir el margen superior para evitar espacio innecesario ahora que el menú subió */}
+        {/* Reducir el margen superior */}
         <div className="mt-9">
-          {/* Layout de gráficas — ahora se superponen sobre el header */}
           <div className="relative">
             <div className="relative -mt-16 md:-mt-24 z-50">
               <DashboardLayout
@@ -78,7 +63,7 @@ function AdminPage() {
       {/* Footer */}
       <Footer />
     </div>
-  )
+  );
 }
 
-export default AdminPage
+export default AdminPage;

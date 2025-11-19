@@ -1,9 +1,13 @@
 import { FaGithubAlt } from "react-icons/fa";
 import { FaRecycle } from "react-icons/fa6";
 import { IoMailOpenOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import AdminToggleButton from "./AdminToggleButton";
 
 function Footer() {
+  const location = useLocation();
+  const isAdminPage = location.pathname === "/admin";
+
   return (
     <footer className="bg-[#19363a] text-gray-300 py-6 w-full mt-auto">
       <div className="container mx-auto px-4">
@@ -21,7 +25,6 @@ function Footer() {
               Sistema inteligente de clasificación de residuos que combina visión por computador, sensores y servicios en la nube para identificar materiales reciclables en tiempo real, registrar datos y generar métricas operativas desde una plataforma web.
             </p>
 
-            {/* Icono no clicable + enlace de Git al lado (alineados a la izquierda) */}
             <div className="mt-2 flex items-center text-gray-300 space-x-2 justify-start">
               <FaGithubAlt className="text-xl" aria-hidden="true" />
               <a
@@ -41,7 +44,6 @@ function Footer() {
               <span>Contacto</span>
             </h3>
 
-            {/* Lista añadida debajo del título */}
             <ul className="mt-2 text-sm text-gray-300 space-y-1">
               <li>valentina.andrade01@usa.edu.co</li>
               <li>catalina.gutierrez01@usa.edu.co</li>
@@ -50,24 +52,17 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Columna EcoVision con ancho reducido para dejar más espacio a las otras secciones */}
           <div className="flex-none w-20 md:w-28 py-4 text-left md:px-6 flex flex-col items-center justify-center">
             <FaRecycle className="text-3xl md:text-4xl text-gray-200" aria-hidden="true" />
             <p className="text-white font-semibold mt-2">EcoVision</p>
 
-            {/* Link hacia la ruta /login */}
-            <Link
-              to="/login"
-              className="mt-4 bg-white text-gray-800 px-4 py-3 rounded-lg shadow-sm font-medium hover:bg-gray-100 cursor-pointer hover:text-black transition inline-block"
-              aria-label="Ir al panel de administración"
-            >
-              Admin
-            </Link>
+            {/* 🔹 Componente reutilizable */}
+            <AdminToggleButton />
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }
 
 export default Footer;

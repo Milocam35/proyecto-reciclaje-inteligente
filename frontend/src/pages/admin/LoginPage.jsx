@@ -43,7 +43,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#76e0c9]">
+    <div className="min-h-screen flex items-center justify-center bg-blue-500">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6">
         {/* Icono insertado en la parte superior del cuadro de credenciales */}
         <div className="flex justify-center mb-4">
@@ -62,7 +62,7 @@ export default function LoginPage() {
               type="text"
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
-              className="mt-1 block w-full rounded-lg border-gray-200 shadow-sm focus:ring-2 focus:ring-teal-400 focus:outline-none px-3 py-2"
+              className="mt-1 block w-full rounded-lg border-gray-200 shadow-sm focus:ring-2 focus:ring-[#3B82F6] focus:outline-none hover:border-[#3B82F6] px-3 py-2 transition-colors"
               placeholder="admin"
               aria-label="Usuario"
               autoComplete="username"
@@ -75,7 +75,7 @@ export default function LoginPage() {
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full rounded-lg border-gray-200 shadow-sm focus:ring-2 focus:ring-teal-400 focus:outline-none px-3 py-2 pr-10"
+              className="mt-1 block w-full rounded-lg border-gray-200 shadow-sm focus:ring-2 focus:ring-[#3B82F6] focus:outline-none hover:border-[#3B82F6] px-3 py-2 pr-10 transition-colors"
               placeholder="••••••••"
               aria-label="Contraseña"
               autoComplete="current-password"
