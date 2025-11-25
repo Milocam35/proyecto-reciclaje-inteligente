@@ -135,6 +135,7 @@ El siguiente diagrama ilustra el flujo de datos principal para la clasificación
     │   ├── stats
     │   │   ├── dto
     │   │   ├── models
+    │   │   ├── repositories
     │   │   ├── services
     │   └── test_db
     ├── modules
@@ -143,20 +144,18 @@ El siguiente diagrama ilustra el flujo de datos principal para la clasificación
     │   ├── cognito
     │   ├── ecr
     │   ├── lambda
-    │   │   └── lambda_builds
     │   ├── rds
     │   ├── s3
     │   ├── sns
     │   └── vpc
     └── scripts
-        └── probar_subir_img
 ```
 
 ---
 
 ## 🧠 Modelo de IA
 
-* **Entrenamiento:** Basado en **TensorFlow**.
+* **Entrenamiento:** Basado en **MobileNet** Entrenado con **Tensorflow**.
 * **Formato de Ejecución:** Convertido a **TensorFlow Lite FP16** para optimizar el rendimiento y la memoria en **AWS Lambda**.
 * **Entrada (Input):** Imagen de **$224 \times 224$ RGB**.
 * **Salida (Output):** Clasificación en una de las tres categorías:
@@ -209,7 +208,6 @@ Registra alertas generadas por el sistema (por ejemplo, errores de hardware o é
 | `origen` | VARCHAR(100) | | Módulo que generó la notificación (e.g., 'ESP32', 'LambdaClassifier'). |
 | `evento_id` | INT | FOREIGN KEY, NULL | Referencia al `Evento` que causó la notificación. |
 | `fecha` | TIMESTAMP | DEFAULT CURRENT\_TIMESTAMP | Momento de la creación de la notificación. |
-
 
 ## 🛠️ Infraestructura como Código (Terraform)
 
